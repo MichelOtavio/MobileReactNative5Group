@@ -3,7 +3,7 @@ import { User } from '../models/user.model'
 
 class UserService {
 
-    private readonly url = 'http://192.168.0.27:3030/users'
+    private readonly url = 'http://192.168.0.19:3030/users'
 
     private async getHeaders() {
         const sessionUser = await authService.getSessionUser()
