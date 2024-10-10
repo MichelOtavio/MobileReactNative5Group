@@ -8,6 +8,8 @@ import { User } from "../../models/user.model";
 import ListItem from '../../components/ListItem';
 import CustomButton from '../../components/CustomButton/CustomButton';
 
+import styles from './styles'
+
 export default function HomePage() {
   const navigation = useNavigation<NavigationProp<any>>();
   const [users, setUsers] = React.useState<User[]>([]);
@@ -31,15 +33,16 @@ export default function HomePage() {
   }
 
   React.useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <CustomButton title="Sair" onPress={logOut} color="#FF3D00" />, // Red color for log out
-      headerRight: () => <CustomButton title="Add" onPress={goToNewUser} color="#6200EE" /> // Purple color for add
-    });
     fetchUsers();
   }, []);
+  
 
   function goToNewUser() {
     navigation.navigate('User');
+  }
+
+  function goToSettings() {
+    navigation.navigate('Roles');
   }
 
   function update(user: User) {
@@ -54,7 +57,7 @@ export default function HomePage() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         onRefresh={fetchUsers}
         refreshing={refreshing}
@@ -69,6 +72,12 @@ export default function HomePage() {
           />
         )}
       />
+
+      <View style={styles.bottomButtons}>
+        <CustomButton title="Roles" onPress={goToSettings} color="#e3d911" />
+        <CustomButton title="Adicionar usuário" onPress={goToNewUser} color="#6200EE" />
+        <CustomButton title="Sair" onPress={logOut} color="#FF3D00" />
+      </View>
     </View>
   );
 }

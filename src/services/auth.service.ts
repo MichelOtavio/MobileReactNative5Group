@@ -4,7 +4,7 @@ import { User } from '../models/user.model'
 
 class AuthService {
 
-    private readonly url = 'http://192.168.3.12:3030/auth/login'
+    private readonly url = 'http://192.168.0.27:3030/auth/login'
     private readonly sessionKey = 'AUTH:SESSION_KEY'
 
     public async login(username: string, password: string) {

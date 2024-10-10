@@ -39,4 +39,22 @@ export default StyleSheet.create({
         fontWeight: 'light',
         fontSize: 16,
     },
+    buttonView: {
+        marginTop: 20,
+        width: '86%',
+    },
+
+    rolesContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginVertical: 10,
+        justifyContent: 'space-between',
+    },
+    
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 8,
+    },
+
 })

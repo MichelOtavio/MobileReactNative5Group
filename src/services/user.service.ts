@@ -1,10 +1,11 @@
-import { authService } from './auth.service'
+import { authService } from '../services/auth.service'
+import { rolesService } from '../services/roles.service'
 import { User } from '../models/user.model'
 import { Alert } from 'react-native'
 
 class UserService {
 
-    private readonly url = 'http://192.168.3.12:3030/users'
+    private readonly url = 'http://192.168.0.27:3030/users'
 
     private async getHeaders() {
         const sessionUser = await authService.getSessionUser()
@@ -36,6 +37,14 @@ class UserService {
             headers: await this.getHeaders()
         })
         return await this.getData(response) as User[]
+    }
+
+    public async getUserById(id?: number) {
+        const response = await fetch(this.url + "/" + id, {
+            method: 'GET',
+            headers: await this.getHeaders()
+        })
+        return await this.getData(response) as User
     }
 
     public async create(user: User) {
