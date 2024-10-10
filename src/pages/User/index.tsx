@@ -1,8 +1,11 @@
-import React from 'react'
-import { Alert, Button, View } from 'react-native'
+import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { View, Button, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
+import { Roles } from '../../models/roles.model';
+import CustomCheckBox from '../../components/CustomCheckBox/CustomCheckBox';
 
 import { userService } from '../../services/user.service'
+import { rolesService } from '../../services/roles.service'
 import MyInput from '../../components/MyInput'
 
 import styles from './styles'
@@ -11,6 +14,9 @@ export default function UserPage() {
 
     const navigation = useNavigation<NavigationProp<any>>()
     const [name, setName] = React.useState('')
+    const [roles, setRoles] = useState<Roles[]>([]);
+    const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+    const [loading, setLoading] = useState(true);
 
     let username = ''
     let password = ''
@@ -18,6 +24,17 @@ export default function UserPage() {
 
     React.useEffect(() => {
         navigation.setOptions({ title: 'Novo Usuário' })
+
+        rolesService.getList()
+            .then((data: Roles[]) => {
+                setRoles(data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching roles data:', error);
+                Alert.alert('Error', 'Failed to load roles');
+                setLoading(false);
+            });
     }, [])
 
     function save() {
@@ -49,16 +66,40 @@ export default function UserPage() {
         })
     }
 
+    const toggleRoleSelection = (id: number) => {
+        setSelectedRoles(prevSelectedRoles =>
+            prevSelectedRoles.includes(id)
+                ? prevSelectedRoles.filter(roleId => roleId !== id)
+                : [...prevSelectedRoles, id]
+        );
+    };
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#6200EE" />;
+    }
+
     return (
         <View style={styles.page}>
 
             <MyInput label='Name' initialValue={name} change={setName} />
             <MyInput label='Login' change={value => username = value} />
+
+            <View style={styles.rolesContainer}>
+                {roles.map(role => (
+                    <CustomCheckBox
+                        key={role.id}
+                        isChecked={selectedRoles.includes(role.id!)}
+                        onPress={() => toggleRoleSelection(role.id!)}
+                        label={role.name}
+                    />
+                ))}
+            </View>
+
             <MyInput label='Senha' change={value => password = value} secureTextEntry />
             <MyInput label='Confirmar Senha' change={value => confirmPass = value} secureTextEntry />
 
             <View style={styles.buttonView}>
-                <Button title='Salvar' onPress={save}  color="#6200EE"/>
+                <Button title='Salvar' onPress={save} color="#6200EE" />
             </View>
 
         </View>

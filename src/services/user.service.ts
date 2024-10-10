@@ -1,4 +1,5 @@
 import { authService } from '../services/auth.service'
+import { rolesService } from '../services/roles.service'
 import { User } from '../models/user.model'
 
 class UserService {
