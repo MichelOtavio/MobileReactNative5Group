@@ -1,13 +1,17 @@
-import { authService } from '../services/auth.service'
+import { authService } from './auth.service'
 import { User } from '../models/user.model'
+import { Alert } from 'react-native'
 
 class UserService {
 
-    private readonly url = 'http://192.168.0.27:3030/users'
+    private readonly url = 'http://192.168.3.12:3030/users'
 
     private async getHeaders() {
         const sessionUser = await authService.getSessionUser()
         if (!sessionUser) throw new Error('User need to sign in')
+
+            console.log('Token:', sessionUser.token);
+            alert(sessionUser.token)
 
         return {
             'Content-Type': 'application/json',
