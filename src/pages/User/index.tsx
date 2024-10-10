@@ -1,15 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import { Alert, TouchableOpacity, View, Text, Image, ActivityIndicator } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-
 import { userService } from '../../services/user.service';
 import { rolesService } from '../../services/roles.service';
 import CustomCheckBox from '../../components/CustomCheckBox/CustomCheckBox';
 import MyInput from '../../components/MyInput';
 
-import styles from './styles';
+import styles from "./styles";
 
 export default function UserPage() {
+
     const navigation = useNavigation<NavigationProp<any>>();
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
@@ -19,8 +20,10 @@ export default function UserPage() {
     const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         navigation.setOptions({ title: 'Novo Usuário' });
+
 
         // Carregar os roles
         rolesService.getList()
@@ -35,12 +38,12 @@ export default function UserPage() {
             });
     }, []);
 
+
     // Função para salvar o usuário
     function save() {
         const roles = rolesNames
             .filter(role => selectedRoles.includes(role.id))
             .map(role => role.name);
-
         if (name.trim() === '') {
             Alert.alert('O Nome é obrigatório');
             return;
@@ -57,7 +60,6 @@ export default function UserPage() {
             Alert.alert('A senha não confere');
             return;
         }
-
         userService.create({ name, username, password, roles })
             .then(() => {
                 navigation.goBack();
@@ -79,10 +81,10 @@ export default function UserPage() {
                 : [...prevSelectedRoles, id]
         );
     };
-
     if (loading) {
         return <ActivityIndicator size="large" color="#6200EE" />;
     }
+
 
     return (
         <View style={styles.page}>
@@ -90,7 +92,6 @@ export default function UserPage() {
                 source={require('./../../../assets/cadastro.png')} // Caminho para a imagem local
                 style={styles.logoImage} // Estilo da imagem
             />
-
             <MyInput
                 label="Name"
                 initialValue={name}
@@ -105,6 +106,7 @@ export default function UserPage() {
                 placeholderTextColor="#999"
             />
 
+
             {/* Roles */}
             <View style={styles.rolesContainer}>
                 {rolesNames.map(role => (
@@ -116,6 +118,7 @@ export default function UserPage() {
                     />
                 ))}
             </View>
+
 
             <MyInput
                 label="Senha"
@@ -131,6 +134,7 @@ export default function UserPage() {
                 placeholder="Confirmar Senha"
                 placeholderTextColor="#999"
             />
+
 
             <TouchableOpacity style={styles.button} onPress={save}>
                 <Text style={styles.buttonText}>Salvar</Text>
