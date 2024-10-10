@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import { View, Button, StyleSheet, Text, Alert, ActivityIndicator } from 'react-native';
+import { View, Button, Alert, ActivityIndicator } from 'react-native';
 import { Roles } from '../../models/roles.model';
 import CustomCheckBox from '../../components/CustomCheckBox/CustomCheckBox';
 
@@ -14,7 +14,7 @@ export default function UserPage() {
 
     const navigation = useNavigation<NavigationProp<any>>()
     const [name, setName] = React.useState('')
-    const [roles, setRoles] = useState<Roles[]>([]);
+    const [rolesNames, setRolesNames] = useState<Roles[]>([]);
     const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,7 +27,7 @@ export default function UserPage() {
 
         rolesService.getList()
             .then((data: Roles[]) => {
-                setRoles(data);
+                setRolesNames(data);
                 setLoading(false);
             })
             .catch(error => {
@@ -38,6 +38,8 @@ export default function UserPage() {
     }, [])
 
     function save() {
+        const roles = rolesNames.filter(role => selectedRoles.includes(role.id!)).map(role => role.name);
+
         if (name.trim() === '') {
             Alert.alert('O Nome é obrigatório')
             return
@@ -55,7 +57,7 @@ export default function UserPage() {
             return
         }
 
-        userService.create({ name, username, password }).then(saved => {
+        userService.create({ name, username, password, roles }).then(saved => {
             navigation.goBack()
         }).catch((error: Error) => {
             if (error.cause === 400) {
@@ -85,7 +87,7 @@ export default function UserPage() {
             <MyInput label='Login' change={value => username = value} />
 
             <View style={styles.rolesContainer}>
-                {roles.map(role => (
+                {rolesNames.map(role => (
                     <CustomCheckBox
                         key={role.id}
                         isChecked={selectedRoles.includes(role.id!)}

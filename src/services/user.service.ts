@@ -4,7 +4,7 @@ import { User } from '../models/user.model'
 
 class UserService {
 
-    private readonly url = 'http://192.168.0.19:3030/users'
+    private readonly url = 'http://192.168.0.20:3030/users'
 
     private async getHeaders() {
         const sessionUser = await authService.getSessionUser()
@@ -33,6 +33,14 @@ class UserService {
             headers: await this.getHeaders()
         })
         return await this.getData(response) as User[]
+    }
+
+    public async getUserById(id?: number) {
+        const response = await fetch(this.url + "/" + id, {
+            method: 'GET',
+            headers: await this.getHeaders()
+        })
+        return await this.getData(response) as User
     }
 
     public async create(user: User) {

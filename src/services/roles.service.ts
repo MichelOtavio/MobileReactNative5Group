@@ -3,7 +3,7 @@ import { Roles } from '../models/roles.model'
 
 class RolesService {
 
-    private readonly url = 'http://192.168.0.19:3030/roles'
+    private readonly url = 'http://192.168.0.20:3030/roles'
 
     private async getHeaders() {
         const sessionUser = await authService.getSessionUser()
